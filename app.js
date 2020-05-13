@@ -20,16 +20,26 @@ app.post("/", (req, res) => {
   
     response.on("data", (data) => {
       const weatherData = JSON.parse(data);
-      const main = weatherData.main;
       const temp = weatherData.main.temp;
       const weatherDescription = weatherData.weather[0].description;
       const icon = weatherData.weather[0].icon;
       const imageUrl = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
-  
+      const main = weatherData.main;
+      // const visibility = weatherData.visibility;
+      const wind = weatherData.wind;
+
+      
       res.write(`<p>The weather is currently ${weatherDescription}</p>`);
-      res.write(`<h1>The temperature in ${query} is ${temp} degree Celcius.</h1>`);
+      res.write(`<p>The temperature in ${query} is ${temp} degree Celcius.</p>`);
       res.write(`<img src="${imageUrl}">`);
-      res.write(`<div>${main}</div>`);
+      const getDetail = prop => {
+        for (let [key, value] of Object.entries(prop)) {
+          res.write(`<p>${key}: ${value}</p>`);
+        }
+      }
+      getDetail(main);
+      getDetail(wind);
+      
       res.send();
     })
   })
